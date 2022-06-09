@@ -44,18 +44,17 @@ for(i in 1:d){
 
 colnames(residus) <-  colnames(nlr)
 abs.residus <- abs(residus)
-data <- abs.residus 
-graph.full <- make_full_graph(d)
+data <- abs.residus
 
 
 
 p <- 0.95 # their value
 G.est = emp_vario(data=data, p = p)
 colnames(G.est) <- rownames(G.est) <- ctry_codes
+graph.full <- make_full_graph(d)
 MST.est <- igraph::mst(graph=graph.full, weights = 2- Gamma2chi(G.est[ends(graph.full,E(graph.full))]), algorithm = "prim")
 vertex_attr(MST.est) <- list(name = colnames(data))
 MST.est <- graphicalExtremes:::set_graph_parameters(MST.est)
-E(MST.est)$width <- Gamma2chi(G.est[ends(MST.est,E(MST.est), names=FALSE)] ) * 10
 igraph::V(MST.est)$color <- grDevices::adjustcolor(col = "#AAC1D8")
 igraph::V(MST.est)$size <- 13
 
@@ -63,6 +62,8 @@ igraph::V(MST.est)$size <- 13
 # par(mar=c(4,4,1.6,1.5), mgp=c(2,0.6,0), pty="s", cex.lab=1.6, cex.axis = 1.3, cex.main=2, pch=1, cex=.9, lwd=1)
 plot(MST.est, layout=coords_tree)
 # dev.off()
+
+saveRDS(list(X=data, coords=coords_tree, g=MST.est), file="~/GitHub/structurelearning/glasso/code/code_paper/currency.rds")
 
 
 
